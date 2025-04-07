@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Policies</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <a href="admin.html" class="admin-button">Admin</a>
+            <a href="hr.html" class="nav-item" id="hr-tab">HR Policies GPT</a>
+            <a href="cisco.html" class="nav-item" id="cisco-tab">Cisco Documentation GPT</a>
+            <a href="hrds.html" class="nav-item" id="hrds-tab">HR Policies DS</a>
+            <a href="ciscods.html" class="nav-item" id="ciscods-tab">Cisco Documentation DS</a>
+        </div>
+        <div class="nav-right">
+            <button id="logout-button" class="logout-btn" onclick="logout()">Log Out</button>
+           </script>
+        </div>
+    </div>
+    
+    <!-- Centered Instruction Message -->
+    <div id="center-message" class="center-message">
+        <p>Ask A Question About HR Policies...</p>
+    </div>
+
+    <div id="chat-container">
+        <!-- Query Display -->
+        <div id="query-display"></div>
+    
+        <!-- Chat Responses -->
+    </div>
+    
+    <!-- Input Area (Fixed at Bottom) -->
+    <div class="input-area">
+        <textarea id="userInput" placeholder="Type your message here..." rows="1"></textarea>
+        <button class="send-btn" onclick="sendMessage()">Send</button>
+    </div>
+
+    <script src="app.js"></script>
+    <!--<script src="script.js"></script	This is used for OpenAI calls??>--> 
+</body>
+</html>

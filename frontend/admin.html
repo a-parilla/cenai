@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="header">
+    <button id="back-button" onclick="goBack()">Back</button>
+    <button id="delete-all-button" onclick="deleteAllLogs()">Delete All Logs</button>
+</div>
+    <div class="admin-container">
+        <div class="admin-header">
+            
+            <h1>Admin Panel</h1>
+        </div>
+        
+        <div class="admin-content">
+            <div class="sidebar">
+                <h2>Sessions</h2>
+                <div id="sessions-list" class="sessions-list">
+                    
+                </div>
+            </div>
+
+            <div class="logs-display">
+                <h2>Session Logs</h2>
+                <div id="messages-log" class="messages-log">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
