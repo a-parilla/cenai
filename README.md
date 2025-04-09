@@ -20,6 +20,7 @@ npm install
 (our vm uses apt instead of brew):
 ```
 sudo apt-get install php composer
+composer require jasig/phpcas
 ```
 
 ## Run the server
