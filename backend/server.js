@@ -53,12 +53,6 @@ db.serialize(() => {
     )`);
 });
 
-// Configure OpenAI API with correct initialization
-const openai = new OpenAI({
-	baseURL: 'https://cenai.cse.uconn.edu/ollama/v1/',
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
 app.post('/api/chat', async (req, res) => {
     try {	
         const userInput = req.body.message;
@@ -94,41 +88,7 @@ app.post('/api/chat', async (req, res) => {
 		res.write(chunk.message.content);
 	}
 	res.end();
-
-	/*
-        const thread = await openai.beta.threads.create();
-
-        await openai.beta.threads.messages.create(
-            thread.id,
-            { role: "user", content: userInput }
-        );
-
-        const run = await openai.beta.threads.runs.create(
-            thread.id,
-            { assistant_id: process.env.ASSISTANT_ID }
-        );
-
-        let runStatus = await openai.beta.threads.runs.retrieve(
-            thread.id,
-            run.id
-        );
-        while (runStatus.status !== 'completed') {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
-            runStatus = await openai.beta.threads.runs.retrieve(
-                thread.id,
-                run.id
-            );
-        }
-
-        const messages = await openai.beta.threads.messages.list(
-            thread.id
-        );
-        const assistantResponse = messages.data[0].content[0].text.value;
-        const stmt = db.prepare("INSERT INTO Logs (SessionID, UserQuery, Response) VALUES (?, ?, ?)");
-        stmt.run(req.sessionID, userInput, assistantResponse);
-	*/
-        // res.json({ response: assistantResponse.response});
-    } catch (error) {
+	} catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
