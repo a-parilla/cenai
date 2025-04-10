@@ -63,7 +63,7 @@ async function ollama_request(model, type, input, res) {
 		name: type
 	});
 	const results = await collection.query({
-		queryTexts: userInput,
+		queryTexts: input,
 		nResults: 3,
 	});
 	console.log(results);
