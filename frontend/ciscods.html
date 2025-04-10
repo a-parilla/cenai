@@ -39,13 +39,13 @@
         <button class="send-btn" onclick="sendMessage('gemma3:27b', 'ollama', 'cisco')">Send</button>
     </div>
 
-    <script src="app.js">
+	<script src="app.js"></script>
+	<script>
 	document.getElementById('userInput').addEventListener('keypress', function(e) {
 		if (e.key === 'Enter') {
 			sendMessage('gemma3:27b', 'ollama', 'cisco');
 		}
 	});
-
 	</script>
 </body>
 </html>

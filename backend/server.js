@@ -75,7 +75,7 @@ async function ollama_request(model, collection_name, input, res) {
 	res.setHeader("Connection", "keep-alive");
 	res.flushHeaders();
 	userPrompt = `Use this context: ${results.documents[0]}\n To answer this prompt: ${input}`;
-	const message = {role: 'user', content: userInput};
+	const message = {role: 'user', content: input};
 
 	const ollama = new Ollama({host: 'https://cenai.cse.uconn.edu/ollama/'})
 	const assistantResponse = await ollama.chat({model:'gemma3:27b' , messages:[message], stream:true,});
