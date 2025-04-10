@@ -53,11 +53,57 @@ db.serialize(() => {
     )`);
 });
 
+async function ollama_request(model, type, req, res) {
+	// First, query Chroma for relevant info:
+	const client = new ChromaClient({
+		path: "https://cenai.cse.uconn.edu/chroma/"
+   	});
+ 	const t_colls = await client.listCollections();
+	const collection = await client.getCollection({
+		name: type
+	});
+	const results = await collection.query({
+		queryTexts: userInput,
+		nResults: 3,
+	});
+	console.log(results);
+
+	// Then, send the full query to Ollama
+	res.setHeader("Content-Type", "text/plain");
+	res.setHeader("Transfer-Encoding", "chunked");
+	res.setHeader("Cache-Control", "no-cache");
+	res.setHeader("Connection", "keep-alive");
+	res.flushHeaders();
+	userPrompt = `Use this context: ${results.documents[0]}\n To answer this prompt: ${userInput}`;
+	const message = {role: 'user', content: userInput};
+
+	const ollama = new Ollama({host: 'https://cenai.cse.uconn.edu/ollama/'})
+	const assistantResponse = await ollama.chat({model:'gemma3:27b' , messages:[message], stream:true,});
+	    
+	for await (const chunk of assistantResponse) {
+		console.log(chunk.message.content);
+		res.write(chunk.message.content);
+	}
+	res.end();
+
+}
+
+async function chatGPT_request() {
+
+}
+
 app.post('/api/chat', async (req, res) => {
     try {	
         const userInput = req.body.message;
+		const model = req.body.model;
+		const implementation = req.body.implementation;
+		const type = req.body.type;
+		if (implementation == "ollama") {
+			await ollama_request(model, type, req, res);
+		}
 
 	// First, query Chroma for relevant info:
+	/*
 	const client = new ChromaClient({
 		path: "https://cenai.cse.uconn.edu/chroma/"
    	});
@@ -88,6 +134,7 @@ app.post('/api/chat', async (req, res) => {
 		res.write(chunk.message.content);
 	}
 	res.end();
+	*/
 	} catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });

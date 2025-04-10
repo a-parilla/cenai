@@ -22,7 +22,9 @@ function linkify(text) {
     return text.replace(/^<br>/, '');
 }
 
-async function sendMessage() {
+// "implementation" is a bad name but describes whether we are sending the request
+// to ChatGPT or to Ollama.
+async function sendMessage(model, implementation, type) {
     const userInput = document.getElementById('userInput').value.trim();
     if (!userInput) return;
 
@@ -55,7 +57,10 @@ async function sendMessage() {
                 'Content-Type': 'application/json',
 		'Accept': 'text/event-stream'
             },
-            body: JSON.stringify({ message: userInput })
+            body: JSON.stringify({ message: userInput,
+				model: model,
+				implementation: implementation,
+				type: type})
         });
 
 	const reader = response.body.getReader();
