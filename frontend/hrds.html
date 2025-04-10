@@ -39,7 +39,13 @@
         <button class="send-btn" onclick="sendMessage('gemma3:27b', 'ollama', 'ethics')">Send</button>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js">
+	document.getElementById('userInput').addEventListener('keypress', function(e) {
+		if (e.key === 'Enter') {
+			sendMessage();
+		}
+	});
+	</script>
     <!--<script src="script.js"></script	This is used for OpenAI calls??>--> 
 </body>
 </html>
