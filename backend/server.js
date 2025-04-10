@@ -53,7 +53,7 @@ db.serialize(() => {
     )`);
 });
 
-async function ollama_request(model, type, req, res) {
+async function ollama_request(model, type, input, res) {
 	// First, query Chroma for relevant info:
 	const client = new ChromaClient({
 		path: "https://cenai.cse.uconn.edu/chroma/"
@@ -99,7 +99,7 @@ app.post('/api/chat', async (req, res) => {
 		const implementation = req.body.implementation;
 		const type = req.body.type;
 		if (implementation == "ollama") {
-			await ollama_request(model, type, req, res);
+			await ollama_request(model, type, userInput, req, res);
 		}
 
 	// First, query Chroma for relevant info:
