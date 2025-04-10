@@ -16,6 +16,13 @@ function linkify(text) {
     return text.replace(/^<br>/, '');
 }
 
+document.getElementById('userInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        const centerMessage = document.getElementById('center-message');
+        centerMessage.classList.add('blink-out');
+    }
+});
+
 // "implementation" is a bad name but describes whether we are sending the request
 // to ChatGPT or to Ollama.
 async function sendMessage(model, implementation, type) {

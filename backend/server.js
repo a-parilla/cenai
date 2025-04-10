@@ -53,14 +53,14 @@ db.serialize(() => {
     )`);
 });
 
-async function ollama_request(model, type, input, res) {
+async function ollama_request(model, collection_name, input, res) {
 	// First, query Chroma for relevant info:
 	const client = new ChromaClient({
 		path: "https://cenai.cse.uconn.edu/chroma/"
    	});
  	const t_colls = await client.listCollections();
 	const collection = await client.getCollection({
-		name: type
+		name: collection_name 
 	});
 	const results = await collection.query({
 		queryTexts: input,
