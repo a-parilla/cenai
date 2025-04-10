@@ -99,7 +99,7 @@ app.post('/api/chat', async (req, res) => {
 		const implementation = req.body.implementation;
 		const type = req.body.type;
 		if (implementation == "ollama") {
-			await ollama_request(model, type, userInput, res);
+			ollama_request(model, type, userInput, res);
 		}
 
 	// First, query Chroma for relevant info:
