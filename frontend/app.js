@@ -1,9 +1,3 @@
-document.getElementById('userInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
-});
-
 // Updated linkify function to handle parentheses and formatting
 function linkify(text) {
     // Handle line breaks, lists, and URLs
