@@ -140,6 +140,9 @@ app.post('/api/chat', async (req, res) => {
 		if (implementation == "ollama") {
 			ollama_request(model, type, userInput, res);
 		}
+		if (implementation == "chatGPT") {
+			chatGPT_request(userInput, res);
+		}
 	} catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
