@@ -123,8 +123,8 @@ async function chatGPT_request(input, res) {
 	);
 
 	for await (const chunk of messages) {
-		console.log(chunk.data[0].content[0].text.value);
-		res.write(chunk.data[0].content[0].text.value);
+		console.log(chunk.content[0].text.value);
+		res.write(chunk.content[0].text.value);
 	}
 	res.end();
 
