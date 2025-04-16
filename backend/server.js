@@ -81,13 +81,31 @@ async function ollama_request(model, collection_name, input, res) {
 	res.setHeader("Cache-Control", "no-cache");
 	res.setHeader("Connection", "keep-alive");
 	res.flushHeaders();
-	sys_instructions = raw_hr_instr.replaceAll("[specific URL]", results.metadatas[0]);
-	console.log(sys_instructions)
-	userPrompt = `Use this context: ${results.documents[0]}\n To answer this prompt: ${input}`;
-	const message = {role: 'user', content: input};
+
+	const cisco_url = results.metadatas[0][0].source;
+	var url_string = ``;
+	for (const data of results.metadatas[0]) {
+			url_string += `${data.source} or `;
+	}
+	console.log(url_string);
+
+	const sys_instructions = raw_hr_instr.replaceAll("[specific URL]", url_string);
+	const instruction = {role: 'system', content:sys_instructions};
+
+	var context_string = ``;
+	for (const doc of results.documents) {
+			context_string += `${doc}\n`;
+	}
+
+	user_prompt = sys_instructions + `\n` + `Use this context: ${context_string}\n To answer this prompt: ${input}`;
+	const message = {role: 'user', content: user_prompt};
 
 	const ollama = new Ollama({host: 'https://cenai.cse.uconn.edu/ollama/'})
-	const assistantResponse = await ollama.chat({model:'gemma3:27b' , messages:[message], stream:true,});
+	const assistantResponse = await ollama.chat({
+		model:'gemma3:27b',
+		messages:[message], 
+		stream:true,
+	});
 	    
 	for await (const chunk of assistantResponse) {
 		console.log(chunk.message.content);
