@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 const openai = new OpenAI({
-	apiKey = process.env.OPENAI_API_KEY,
+	apiKey : process.env.OPENAI_API_KEY,
 });
 
 // Configure sqlite
