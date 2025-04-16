@@ -42,6 +42,10 @@ app.use((req, res, next) => {
 // Serve static files from the frontend directory
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+const openai = new OpenAI({
+	apiKey = process.env.OPENAI_API_KEY,
+});
+
 // Configure sqlite
 const db = new sqlite3.Database('chat.logs');
 db.serialize(() => {
@@ -88,8 +92,43 @@ async function ollama_request(model, collection_name, input, res) {
 
 }
 
-async function chatGPT_request() {
+async function chatGPT_request(input, res) {
 
+	const thread = await openai.beta.threads.create();
+	await openai.beta.threads.messages.create(
+		thread.id,
+		{ role: "user", content: input }
+	);
+
+	const run = await openai.beta.threads.runs.create(
+		thread.id,
+		{ assistant_id: process.env.ASSISTANT_ID }
+    );
+
+	let runStatus = await openai.beta.threads.runs.retrieve(
+		thread.id,
+		run.id
+	);
+
+	while (runStatus.status !== 'completed') {
+		await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+		runStatus = await openai.beta.threads.runs.retrieve(
+			thread.id,
+			run.id
+		);
+	}
+
+	const messages = await openai.beta.threads.messages.list(
+		thread.id
+	);
+
+	for await (const chunk of assistantResponse) {
+		console.log(chunk.data[0].content[0].text.value);
+		res.write(chunk.data[0].content[0].text.value);
+	}
+	res.end();
+
+	// TODO add logging	
 }
 
 app.post('/api/chat', async (req, res) => {
@@ -101,40 +140,6 @@ app.post('/api/chat', async (req, res) => {
 		if (implementation == "ollama") {
 			ollama_request(model, type, userInput, res);
 		}
-
-	// First, query Chroma for relevant info:
-	/*
-	const client = new ChromaClient({
-		path: "https://cenai.cse.uconn.edu/chroma/"
-   	});
- 	const t_colls = await client.listCollections();
-	const collection = await client.getCollection({
-		name: "ethics"
-	});
-	const results = await collection.query({
-		queryTexts: userInput,
-		nResults: 3,
-	});
-	console.log(results);
-
-	// Then, send the full query to Ollama
-	res.setHeader("Content-Type", "text/plain");
-	res.setHeader("Transfer-Encoding", "chunked");
-	res.setHeader("Cache-Control", "no-cache");
-	res.setHeader("Connection", "keep-alive");
-	res.flushHeaders();
-	userPrompt = `Use this context: ${results.documents[0]}\n To answer this prompt: ${userInput}`;
-	const message = {role: 'user', content: userInput};
-
-	const ollama = new Ollama({host: 'https://cenai.cse.uconn.edu/ollama/'})
-	const assistantResponse = await ollama.chat({model:'gemma3:27b' , messages:[message], stream:true,});
-	    
-	for await (const chunk of assistantResponse) {
-		console.log(chunk.message.content);
-		res.write(chunk.message.content);
-	}
-	res.end();
-	*/
 	} catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
