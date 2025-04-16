@@ -47,7 +47,7 @@ const openai = new OpenAI({
 	apiKey : process.env.OPENAI_API_KEY,
 });
 
-const raw_hr_instr = fs.readFileSync('HR_SYS_INSTRUCTIONS', 'utf8');
+const raw_hr_instr = fs.readFileSync('/opt/team/cenai/backend/HR_SYS_INSTRUCTIONS', 'utf8');
 
 // Configure sqlite
 const db = new sqlite3.Database('chat.logs');
@@ -81,7 +81,7 @@ async function ollama_request(model, collection_name, input, res) {
 	res.setHeader("Cache-Control", "no-cache");
 	res.setHeader("Connection", "keep-alive");
 	res.flushHeaders();
-	sys_instructions = raw_hr_instr.replace("[specific URL]", results.metadatas[0]);
+	sys_instructions = raw_hr_instr.replaceAll("[specific URL]", results.metadatas[0]);
 	console.log(sys_instructions)
 	userPrompt = `Use this context: ${results.documents[0]}\n To answer this prompt: ${input}`;
 	const message = {role: 'user', content: input};
