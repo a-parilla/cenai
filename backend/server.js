@@ -122,7 +122,7 @@ async function chatGPT_request(input, res) {
 		thread.id
 	);
 
-	for await (const chunk of assistantResponse) {
+	for await (const chunk of messages) {
 		console.log(chunk.data[0].content[0].text.value);
 		res.write(chunk.data[0].content[0].text.value);
 	}
