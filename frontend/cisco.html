@@ -36,12 +36,18 @@
     <!-- Input Area (Fixed at Bottom) -->
     <div class="input-area">
         <textarea id="userInput" placeholder="Type your message here..." rows="1"></textarea>
-        <button class="send-btn" onclick="sendMessage()">Send</button>
+        <button class="send-btn" onclick="sendMessage('null', 'chatGPT', 'ethics')">Send</button>
     </div>
     
 
 
     <script src="app.js"></script>
-    <script src="script.js"></script>
+	<script>
+	document.getElementById('userInput').addEventListener('keypress', function(e) {
+		if (e.key === 'Enter') {
+			sendMessage('null', 'chatGPT', 'ethics');
+		}
+	});
+	</script>
 </body>
 </html>

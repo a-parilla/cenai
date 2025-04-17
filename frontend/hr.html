@@ -39,7 +39,8 @@
         <button class="send-btn" onclick="sendMessage('null', 'chatGPT', 'ethics')">Send</button>
     </div>
 
-    <script src="app.js">
+	<script src="app.js"></script>
+	<script>
 	document.getElementById('userInput').addEventListener('keypress', function(e) {
 		if (e.key === 'Enter') {
 			sendMessage('null', 'chatGPT', 'ethics');
